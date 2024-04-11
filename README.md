@@ -16,7 +16,7 @@ This Python script is designed to automate the process of web crawling and form 
 
 ### Clone the Repository: Clone the repository containing the script.
 
- git clone https://github.com/CerTusHack/FormsCrawler.git
+ git clone https://github.com/CerTusHack/WebCrawler.git
 
 ### Install Dependencies: Install the required dependencies using pip.
 
