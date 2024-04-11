@@ -11,6 +11,12 @@ import sys
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+print("""
+╭─┬─┬───┬─┬──╮
+│C│E│R│T│U│S │
+╰─┴─┴───┴─┴──╯
+""")
+
 # Global variables
 visited_urls = set()
 max_depth = 3  # Maximum recursion depth
