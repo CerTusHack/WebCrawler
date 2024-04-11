@@ -1,4 +1,4 @@
-# Web Crawler for Bug Bounty Automation
+# Web Crawler for Bug Hunting Automation
 
 This Python script is designed to automate the process of web crawling and form submission for bug bounty hunting. It utilizes asynchronous programming with asyncio and aiohttp to achieve concurrent HTTP requests and form submissions.
 
@@ -12,10 +12,18 @@ This Python script is designed to automate the process of web crawling and form 
 
 ## Usage
 
-1. **Installation**: Make sure you have Python 3.x installed on your system. Install required dependencies using `pip install -r requirements.txt`.
-2. **Execution**: Run the script by executing `python web_crawler.py`.
-3. **Input**: Enter the domain you want to crawl when prompted. The script will start crawling from the specified domain.
-4. **Output**: The script logs information about discovered forms and form submissions. Execution time is also displayed upon completion.
+# Clone the Repository: Clone the repository containing the script.
+
+ git clone https://github.com/your_username/bug_hunting_crawler.git
+
+# Install Dependencies: Install the required dependencies using pip.
+
+pip install -r requirements.txt
+
+(Make sure you have installed pip)
+# Run the Script: Execute the script and provide the domain you want to crawl when prompted.
+
+python CertCrawler.py
 
 ## Customization
 
