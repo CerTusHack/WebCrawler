@@ -7,21 +7,23 @@ This Python script is designed to automate the process of web crawling and form 
 1. **Web Crawling**: The script recursively crawls through the specified domain, discovering internal links and identifying forms on web pages.
 2. **Form Detection**: It detects HTML forms on crawled web pages and logs their URLs.
 3. **Form Submission**: For each discovered form, the script can perform a form submission with specified data.
-4. **Throttling**: It includes a rate-limiting mechanism to avoid overloading the server with too many concurrent requests.
-5. **Error Handling**: The script handles errors gracefully and logs them for debugging purposes.
+4. **Sensitive Directories**: It detects sensitive directories on crawled web pages.
+5. **External resources**: It also detects external resources.
+6. **Throttling**: It includes a rate-limiting mechanism to avoid overloading the server with too many concurrent requests.
+7. **Error Handling**: The script handles errors gracefully and logs them for debugging purposes.
 
 ## Usage
 
-# Clone the Repository: Clone the repository containing the script.
+### Clone the Repository: Clone the repository containing the script.
 
- git clone https://github.com/your_username/bug_hunting_crawler.git
+ git clone https://github.com/CerTusHack/FormsCrawler.git
 
-# Install Dependencies: Install the required dependencies using pip.
+### Install Dependencies: Install the required dependencies using pip.
 
 pip install -r requirements.txt
 
 (Make sure you have installed pip)
-# Run the Script: Execute the script and provide the domain you want to crawl when prompted.
+### Run the Script: Execute the script and provide the domain you want to crawl when prompted.
 
 python CertCrawler.py
 
