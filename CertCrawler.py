@@ -4,6 +4,8 @@ import time
 import logging
 from urllib.parse import urlparse, urljoin
 from lxml import html as lh
+import signal
+import sys
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -26,7 +28,7 @@ async def fetch(url):
                 else:
                     logger.warning(f"Failed to fetch URL. Status code: {response.status}")
                     return None
-        except Exception as e:
+        except aiohttp.ClientError as e:
             logger.error(f"Error fetching URL {url}: {e}")
             return None
 
@@ -58,6 +60,7 @@ async def crawl(url, depth):
                 logger.info(f"Form Found: {url}")
             internal_links = get_internal_links(url, html_content)
             await asyncio.gather(*[crawl(link, depth + 1) for link in internal_links])
+            await check_external_resources(url, html_content)
 
 async def get_sensitive_directories(url):
     logger.info("Searching for sensitive directories...")
@@ -82,13 +85,33 @@ async def get_sensitive_directories(url):
         logger.info("No sensitive directories found.")
     return results
 
+async def check_external_resources(url, html_content):
+    logger.info("Checking external resources...")
+    tree = lh.fromstring(html_content)
+    external_resources = {
+        "JavaScript": tree.xpath('//script/@src'),
+        "CSS": tree.xpath('//link[@rel="stylesheet"]/@href'),
+        "Images": tree.xpath('//img/@src'),
+        "Other": tree.xpath('//source/@src') + tree.xpath('//video/@src') + tree.xpath('//audio/@src')
+    }
+    for resource_type, resources in external_resources.items():
+        if resources:
+            logger.info(f"{resource_type} resources found on {url}: {resources}")
+        else:
+            logger.info(f"No {resource_type} resources found on {url}.")
+
 async def main():
     domain = input("Enter the domain you want to crawl (e.g., example.com): ")
     starting_url = "https://" + domain if not domain.startswith("https://") else domain
     await crawl(starting_url, 0)
     sensitive_directories = await get_sensitive_directories(starting_url)
 
+def handle_interrupt(sig, frame):
+    logger.info("Scan interrupted by user.")
+    sys.exit(0)
+
 if __name__ == "__main__":
     start_time = time.time()
+    signal.signal(signal.SIGINT, handle_interrupt)
     asyncio.run(main())
     logger.info(f"Execution time: {round(time.time() - start_time, 2)} seconds")
