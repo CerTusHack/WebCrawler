@@ -1,42 +1,58 @@
-# Web Crawler for Bug Hunting Automation
+# Web Crawler by CERTUSHACK
 
-This Python script is designed to automate the process of web crawling and form submission for bug bounty hunting. It utilizes asynchronous programming with asyncio and aiohttp to achieve concurrent HTTP requests and form submissions.
+This is a web crawler tool designed to scan websites for vulnerabilities and sensitive information. It recursively crawls internal links, checks for sensitive directories, and identifies external resources such as JavaScript, CSS, images, and other files.
 
 ## Features
 
-1. **Web Crawling**: The script recursively crawls through the specified domain, discovering internal links and identifying forms on web pages.
-2. **Form Detection**: It detects HTML forms on crawled web pages and logs their URLs.
-3. **Form Submission**: For each discovered form, the script can perform a form submission with specified data.
-4. **Sensitive Directories**: It detects sensitive directories on crawled web pages.
-5. **External resources**: It also detects external resources.
-6. **Throttling**: It includes a rate-limiting mechanism to avoid overloading the server with too many concurrent requests.
-7. **Error Handling**: The script handles errors gracefully and logs them for debugging purposes.
+- Crawls internal links recursively up to a specified depth.
+- Identifies forms and input fields on web pages.
+- Searches for sensitive directories commonly found in web applications.
+- Checks for external resources like JavaScript, CSS, images, and other files.
+- Designed to be lightweight and efficient.
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/CerTusHack/WebCrawler.git
+```
+
+2. Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
 
 ## Usage
 
-### Clone the Repository: Clone the repository containing the script.
+To use the web crawler, simply run the `main.py` script and follow the prompts:
 
- git clone https://github.com/CerTusHack/WebCrawler.git
-
-### Install Dependencies: Install the required dependencies using pip.
-
-pip install -r requirements.txt
-
-(Make sure you have installed pip)
-### Run the Script: Execute the script and provide the domain you want to crawl when prompted.
-
+```bash
 python CertCrawler.py
+```
 
-## Customization
+Enter the domain you want to crawl when prompted, and the crawler will start scanning the website.
 
-1. **Maximum Depth**: Adjust the `max_depth` variable to control the maximum recursion depth for crawling.
-2. **Concurrent Requests**: Modify the `concurrent_requests` variable to change the number of concurrent HTTP requests.
-3. **Crawl Delay**: Set the `crawl_delay` variable to control the delay between consecutive requests to avoid overloading the server.
+## Configuration
+
+You can configure the maximum recursion depth and other parameters directly in the `CertCrawler.py` file by modifying the `max_depth` variable.
 
 ## Contributing
 
-Contributions, bug reports, and feature requests are welcome! Feel free to open an issue or submit a pull request on GitHub.
+Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-new-feature`).
+3. Make your changes.
+4. Commit your changes (`git commit -am 'Add new feature'`).
+5. Push to the branch (`git push origin feature-new-feature`).
+6. Create a new Pull Request.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU License. See the [LICENSE](LICENSE) file for details.
+
+## Disclaimer
+
+This tool is for educational purposes only. Use it responsibly and with proper authorization. We are not responsible for any misuse or damage caused by this tool.
