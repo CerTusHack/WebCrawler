@@ -1,3 +1,5 @@
+import json
+import os
 import aiohttp
 import asyncio
 import time
@@ -8,8 +10,17 @@ from urllib.parse import urlparse, urljoin
 from lxml import html as lh
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(format='%(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Define colors for different log levels
+LOG_COLORS = {
+    "INFO": "\033[94m",  # Blue
+    "WARNING": "\033[93m",  # Yellow
+    "ERROR": "\033[91m",  # Red
+    "DEBUG": "\033[92m",  # Green
+    "RESET": "\033[0m"  # Reset
+}
 
 print("""
 ╭─┬─┬───┬─┬──╮
@@ -30,7 +41,8 @@ async def main():
         sensitive_directories = await get_sensitive_directories(client, starting_url)
 
 async def crawl(client, url, depth):
-    logger.info(f"Crawling URL: {url}")
+    color = LOG_COLORS["INFO"]
+    logger.info(f"{color}Analyzing URL: {url}{LOG_COLORS['RESET']}")
     if depth <= max_depth and url not in visited_urls:
         visited_urls.add(url)
         async with client.get(url) as response:
@@ -40,13 +52,33 @@ async def crawl(client, url, depth):
                 forms = tree.xpath('//form')
                 input_texts = tree.xpath('//input[@type="text"]')
                 if forms or input_texts:
-                    logger.info(f"Form Found: {url}")
+                    logger.info(f"Scrape Found: {url}")
                 internal_links = get_internal_links(url, html_content)
                 await asyncio.gather(*[crawl(client, link, depth + 1) for link in internal_links])
                 await check_external_resources(client, url, html_content)
+                # Scraping data from the webpage
+                scraped_data = scrape_data(url, html_content)
+                if scraped_data:
+                    logger.info(f"Scraped data from {url}: Title - {scraped_data['Title']}, Paragraphs count - {len(scraped_data['Paragraphs'])}")
+                    export_to_json(scraped_data, f"{url.replace(':', '_').replace('/', '_')}.json")
+                # Accessing data from a public API
+                await access_ipinfo_api(url)
+
+async def access_ipinfo_api(url):
+    color = LOG_COLORS["INFO"]
+    logger.info(f"{color}Working with IPinfo API...{LOG_COLORS['RESET']}")
+    try:
+        ipinfo_url = f"http://ip-api.com/json/{url}?fields=status,message,country,countryCode,region,regionName,city,zip,timezone,isp,org,as,asname,reverse,hosting,query"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(ipinfo_url) as response:
+                data = await response.json()
+                logger.info(f"IPinfo data for {url}: {data}")
+    except Exception as e:
+        logger.error(f"Error accessing IPinfo API: {e}")
 
 async def get_sensitive_directories(client, url):
-    logger.info("Searching for sensitive directories...")
+    color = LOG_COLORS["INFO"]
+    logger.info(f"{color}Searching for sensitive directories...{LOG_COLORS['RESET']}")
     sensitive_directories = [
         ".git", ".svn", ".DS_Store", "CVS", "backup", "backups", "backup_files",
         "backup_files_old", "backup_files_old_versions", "backup_old", "backup_old_versions",
@@ -69,7 +101,8 @@ async def get_sensitive_directories(client, url):
     return results
 
 async def check_external_resources(client, url, html_content):
-    logger.info("Checking external resources...")
+    color = LOG_COLORS["INFO"]
+    logger.info(f"{color}Checking external resources...{LOG_COLORS['RESET']}")
     tree = lh.fromstring(html_content)
     external_resources = {
         "JavaScript": tree.xpath('//script/@src'),
@@ -83,27 +116,40 @@ async def check_external_resources(client, url, html_content):
         else:
             logger.info(f"No {resource_type} resources found on {url}.")
 
-def handle_interrupt(sig, frame):
-    logger.info("Scan interrupted by user.")
+def get_internal_links(url, html_content):
+    tree = lh.fromstring(html_content)
+    internal_links = tree.xpath('//a/@href')
+    return [urljoin(url, link) for link in internal_links]
+
+def scrape_data(url, html_content):
+    color = LOG_COLORS["INFO"]
+    logger.info(f"{color}Scraping data from {url}...{LOG_COLORS['RESET']}")
+    try:
+        tree = lh.fromstring(html_content)
+        title = tree.xpath('//title/text()')[0].strip() if tree.xpath('//title/text()') else ""
+        paragraphs = [p.strip() for p in tree.xpath('//p/text()') if p.strip()]
+        form_links = tree.xpath('//form/@action')
+        return {"Title": title, "Paragraphs": paragraphs, "Form Links": form_links}
+    except Exception as e:
+        logger.error(f"Error scraping data from {url}: {e}")
+        return None
+
+def export_to_json(data, filename):
+    color = LOG_COLORS["INFO"]
+    logger.info(f"{color}Data exported to {filename}{LOG_COLORS['RESET']}")
+    with open(filename, "w") as f:
+        json.dump(data, f)
+
+def handle_interrupt(signal, frame):
+    color = LOG_COLORS["WARNING"]
+    logger.warning(f"{color}Program interrupted by user. Exiting...{LOG_COLORS['RESET']}")
     sys.exit(0)
 
-def get_internal_links(url, html_content):
-    logger.info("Extracting internal links...")
-    internal_links = set()
-    tree = lh.fromstring(html_content)
-    for link in tree.xpath('//a/@href'):
-        next_url = urljoin(url, link)
-        parsed_next_url = urlparse(next_url)
-        if parsed_next_url.scheme and parsed_next_url.netloc == urlparse(url).netloc:
-            internal_links.add(next_url)
-    if internal_links:
-        logger.info(f"Internal links found: {internal_links}")
-    else:
-        logger.info("No internal links found.")
-    return internal_links
-
 if __name__ == "__main__":
-    start_time = time.time()
     signal.signal(signal.SIGINT, handle_interrupt)
+    start_time = time.time()
     asyncio.run(main())
-    logger.info(f"Execution time: {round(time.time() - start_time, 2)} seconds")
+    end_time = time.time()
+    execution_time = round(end_time - start_time, 2)
+    color = LOG_COLORS["INFO"]
+    logger.info(f"{color}Execution time: {execution_time} seconds{LOG_COLORS['RESET']}")
