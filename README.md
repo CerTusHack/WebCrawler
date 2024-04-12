@@ -1,4 +1,4 @@
-```markdown
+
 # Web Crawler by CERTUSHACK
 
 This is a Python web crawler script that extracts data from webpages and checks for sensitive directories.
@@ -13,23 +13,23 @@ This is a Python web crawler script that extracts data from webpages and checks 
 
 1. Clone the repository:
 
-```
+
 git clone https://github.com/CertusHack/WebCrawler.git
-```
+
 
 2. Install the dependencies:
 
-```
+
 pip install -r requirements.txt
-```
+
 
 ## Usage
 
 1. Run the script:
 
-```
-python web_crawler.py
-```
+
+python CertCrawler.py
+
 
 2. Enter the domain you want to crawl when prompted.
 
@@ -37,7 +37,5 @@ python web_crawler.py
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
+This project is licensed under the GNU License - see the [LICENSE](LICENSE) file for details.
 
-Asegúrate de actualizar la sección de "License" con la licencia adecuada para tu proyecto.
