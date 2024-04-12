@@ -1,58 +1,43 @@
+```markdown
 # Web Crawler by CERTUSHACK
 
-This is a web crawler tool designed to scan websites for vulnerabilities and sensitive information. It recursively crawls internal links, checks for sensitive directories, and identifies external resources such as JavaScript, CSS, images, and other files.
+This is a Python web crawler script that extracts data from webpages and checks for sensitive directories.
 
-## Features
+## Dependencies
 
-- Crawls internal links recursively up to a specified depth.
-- Identifies forms and input fields on web pages.
-- Searches for sensitive directories commonly found in web applications.
-- Checks for external resources like JavaScript, CSS, images, and other files.
-- Designed to be lightweight and efficient.
+- Python 3.7 or higher
+- aiohttp==3.9.2
+- lxml==5.2.1
 
 ## Installation
 
 1. Clone the repository:
 
-```bash
-git clone https://github.com/CerTusHack/WebCrawler.git
+```
+git clone https://github.com/CertusHack/WebCrawler.git
 ```
 
-2. Install the required dependencies:
+2. Install the dependencies:
 
-```bash
+```
 pip install -r requirements.txt
 ```
 
 ## Usage
 
-To use the web crawler, simply run the `main.py` script and follow the prompts:
+1. Run the script:
 
-```bash
-python CertCrawler.py
+```
+python web_crawler.py
 ```
 
-Enter the domain you want to crawl when prompted, and the crawler will start scanning the website.
+2. Enter the domain you want to crawl when prompted.
 
-## Configuration
-
-You can configure the maximum recursion depth and other parameters directly in the `CertCrawler.py` file by modifying the `max_depth` variable.
-
-## Contributing
-
-Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-new-feature`).
-3. Make your changes.
-4. Commit your changes (`git commit -am 'Add new feature'`).
-5. Push to the branch (`git push origin feature-new-feature`).
-6. Create a new Pull Request.
+3. Wait for the script to finish crawling the website. The extracted data will be saved in JSON files.
 
 ## License
 
-This project is licensed under the GNU License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```
 
-## Disclaimer
-
-This tool is for educational purposes only. Use it responsibly and with proper authorization. We are not responsible for any misuse or damage caused by this tool.
+Asegúrate de actualizar la sección de "License" con la licencia adecuada para tu proyecto.
