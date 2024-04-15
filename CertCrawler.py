@@ -68,7 +68,9 @@ async def access_ipinfo_api(url):
     color = LOG_COLORS["INFO"]
     logger.info(f"{color}Working with IPinfo API...{LOG_COLORS['RESET']}")
     try:
-        ipinfo_url = f"http://ip-api.com/json/{url}?fields=status,message,country,countryCode,region,regionName,city,zip,timezone,isp,org,as,asname,reverse,hosting,query"
+        parsed_url = urlparse(url)
+        domain = parsed_url.netloc
+        ipinfo_url = f"http://ip-api.com/json/{domain}"
         async with aiohttp.ClientSession() as session:
             async with session.get(ipinfo_url) as response:
                 data = await response.json()
