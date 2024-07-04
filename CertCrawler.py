@@ -32,6 +32,9 @@ print("""
 visited_urls = set()
 max_depth = 3  # Maximum recursion depth
 
+# Dictionary to cache IPinfo responses
+ipinfo_cache = {}
+
 async def main():
     connector = aiohttp.TCPConnector()
     async with aiohttp.ClientSession(connector=connector) as client:
@@ -70,11 +73,19 @@ async def access_ipinfo_api(url):
     try:
         parsed_url = urlparse(url)
         domain = parsed_url.netloc
-        ipinfo_url = f"http://ip-api.com/json/{domain}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(ipinfo_url) as response:
-                data = await response.json()
-                logger.info(f"IPinfo data for {url}: {data}")
+        
+        # Check if IP info for this domain is cached
+        if domain in ipinfo_cache:
+            data = ipinfo_cache[domain]
+            logger.info(f"IPinfo data (cached) for {url}: {data}")
+        else:
+            ipinfo_url = f"http://ip-api.com/json/{domain}"
+            async with aiohttp.ClientSession() as session:
+                async with session.get(ipinfo_url) as response:
+                    data = await response.json()
+                    logger.info(f"IPinfo data for {url}: {data}")
+                    # Cache the IPinfo response
+                    ipinfo_cache[domain] = data
     except Exception as e:
         logger.error(f"Error accessing IPinfo API: {e}")
 
